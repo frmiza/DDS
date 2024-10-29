@@ -7,5 +7,4 @@ struct Node_int
     struct Node_int *next;
 };
 
-
 #endif //NODE_H

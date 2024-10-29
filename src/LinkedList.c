@@ -1,6 +1,5 @@
 #include "LinkedList.h"
 
-
 struct Node_int* node_create(int data);
 void delete_node_int(struct Node_int* node_to_delete);
 
@@ -52,7 +51,7 @@ struct Node_int* iterate(struct LinkedList_int* linked_list, size_t index)
 {   
     if (index < 0 || index >= linked_list->lenght)
     {
-        printf("Index out of bound..");
+        printf("Index out of bound..\n");
         exit(9);
     }
 
@@ -66,31 +65,41 @@ struct Node_int* iterate(struct LinkedList_int* linked_list, size_t index)
 
 void insert_int(struct LinkedList_int* linked_list, size_t index, int data)
 {   
+    if(linked_list->head == NULL){
+        printf("empty list, imposible remove itens\n");
+        return;
+    }
+
     if(index == 0){
         appendleft_int(linked_list, data);
         return;
     }
 
+    if(index == linked_list->lenght){
+        append_int(linked_list, data);
+        return;
+    }
+
+    if(linked_list->head == NULL && index > 0){
+        printf("empty list, imposible inserte at: %d\n",index); 
+        return;
+    }
+    
     struct Node_int* node_to_insert = node_create(data);
     struct Node_int* cursor = iterate(linked_list, index -1);
     cursor->next = node_to_insert;
-    if(index == linked_list->lenght -1)
-        linked_list->tail = node_to_insert;
     linked_list->lenght += 1;
+
 }
 
 void append_int(struct LinkedList_int* linked_list, int data)
 {   
     struct Node_int* node_to_insert = node_create(data);
-    if(linked_list->head != NULL){
-        struct Node_int* cursor = iterate(linked_list, linked_list->lenght -1);
-        cursor->next = node_to_insert;
-        linked_list->tail = node_to_insert;        
-    }
-    else{
+    if(linked_list->head == NULL)
         linked_list->head = node_to_insert;
-        linked_list->tail = node_to_insert;
-    }
+    else
+        linked_list->tail->next = node_to_insert;
+    linked_list->tail = node_to_insert; 
     linked_list->lenght += 1;
 }
 
@@ -106,40 +115,60 @@ void appendleft_int(struct LinkedList_int* linked_list, int data)
 
 void remove_int(struct LinkedList_int* linked_list, size_t index)
 {
-    
+
+    if(linked_list->head == NULL){
+        printf("empty list, imposible remove itens\n");
+        return;
+    }
+
     if(index == 0){
         popleft_int(linked_list);
         return;
     }
 
-    struct Node_int* cursor = iterate(linked_list, index - 1);
+    struct Node_int* cursor = iterate(linked_list,index -1);
     struct Node_int* node_to_delete = cursor->next;
     cursor->next = node_to_delete->next;
-    if(index = linked_list->lenght -1)
-        linked_list->tail = cursor;
+    linked_list->tail = cursor;
     delete_node_int(node_to_delete);
     linked_list->lenght -= 1;
 }
 
 void pop_int(struct LinkedList_int* linked_list)
 {   
-    if(linked_list->head != NULL){
-        struct Node_int* cursor = iterate(linked_list, linked_list->lenght -2);
-        struct Node_int* node_to_delete = cursor->next;
-        linked_list->tail = cursor;
-        delete_node_int(node_to_delete);
-        linked_list->lenght -= 1;
+    if(linked_list->head == NULL){
+        printf("empty list, imposible remove itens\n");
+        return;  
     }
+
+    if(linked_list->lenght == 1){
+        struct Node_int* node_to_delete = linked_list->head;
+        delete_node_int(node_to_delete);
+        linked_list->tail = NULL;
+        linked_list->lenght -= 1;
+        return;
+    }
+
+    struct Node_int* cursor = iterate(linked_list, linked_list->lenght - 2);
+    struct Node_int* node_to_delete = cursor->next;
+    linked_list->tail = cursor;
+    delete_node_int(node_to_delete);
+    linked_list->lenght -= 1;
 }
 
 void popleft_int(struct LinkedList_int* linked_list)
 {   
-    if(linked_list->head != NULL){
-        struct Node_int* node_to_delete = linked_list->head;
-        linked_list->head = node_to_delete->next;
-        delete_node_int(node_to_delete);
-        linked_list->lenght -= 1;
+    if(linked_list->head == NULL){
+        printf("empty list, imposible remove itens\n");
+        return;
     }
+    struct Node_int* node_to_delete = linked_list->head;
+    linked_list->head = node_to_delete->next;
+    if(node_to_delete->next == NULL)
+        linked_list->tail = NULL;
+    delete_node_int(node_to_delete);
+    linked_list->lenght -= 1;
+    
 }
 
 int retrieve_int(struct LinkedList_int* linked_list, size_t index)
