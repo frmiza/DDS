@@ -14,6 +14,18 @@ struct DataStructure* create_data_structure()
     return new_structure;
 }
 
+void delete_data_structure(struct DataStructure* data_structure)
+{
+    struct Node_int* node_to_delete;
+    
+    for (size_t pos = 0; pos < data_structure->length; pos++){
+        node_to_delete = data_structure->head;
+        data_structure->head = data_structure->head->next;
+        delete_node(node_to_delete);
+    }
+    free(data_structure);
+}
+
 struct Node_int* create_node(int data)
 {
     struct Node_int new_node_inst;
@@ -33,7 +45,7 @@ void delete_node(struct Node_int* node_to_delete)
 
 struct Node_int* iterate(struct DataStructure* data_structure, size_t index)
 {   
-    if (index < 0 || index >= data_structure->length)
+    if (index >= data_structure->length || data_structure->head == NULL)
     {
         printf("Index out of bound..\n");
         exit(9);
@@ -41,7 +53,7 @@ struct Node_int* iterate(struct DataStructure* data_structure, size_t index)
 
     struct Node_int* cursor = data_structure->head;
 
-    for(int iterator = 0; iterator < index; iterator++)
+    for(size_t iterator = 0; iterator < index; iterator++)
         cursor = cursor->next;
     
     return cursor;
@@ -49,12 +61,12 @@ struct Node_int* iterate(struct DataStructure* data_structure, size_t index)
 
 void insert_data_struct(struct DataStructure* data_structure, size_t index, int data)
 {   
-    if(data_structure == NULL){
+    if(data_structure == NULL || ((data_structure->head == NULL) && (index > 0))){
         printf("empty list, imposible inserte at: %d\n",index); 
         return;
     }
 
-    struct Node_int* node_to_insert = node_create(data);
+    struct Node_int* node_to_insert = create_node(data);
 
     if(index == 0){
         node_to_insert->next = data_structure->head;
@@ -87,9 +99,8 @@ void insert_data_struct(struct DataStructure* data_structure, size_t index, int 
 
 void remove_data_struct(struct DataStructure* data_structure, size_t index)
 {
-
-    if(data_structure == NULL){
-        printf("empty list, imposible remove itens\n");
+    if(data_structure == NULL || data_structure->head == NULL){
+        printf("Empty list, impossible to remove items\n");
         return;
     }
 
@@ -98,24 +109,26 @@ void remove_data_struct(struct DataStructure* data_structure, size_t index)
         data_structure->head = node_to_delete->next;
         if(data_structure->length == 1)
             data_structure->tail = NULL;
-        delete_node_int(node_to_delete);
+        delete_node(node_to_delete);
         data_structure->length -= 1;
         return;
     }
 
-    if(index == data_structure->length){
+    if(index == data_structure->length -1){
         struct Node_int* node_to_delete = data_structure->tail;
         data_structure->tail =  node_to_delete->prev;
         data_structure->tail->next = NULL;
-        delete_node_int(node_to_delete);
+        delete_node(node_to_delete);
         data_structure->length -= 1;
         return;
     }
 
-    struct Node_int* cursor = iterate(data_structure,index -1);
-    struct Node_int* node_to_delete = cursor->next;
-    cursor->next = node_to_delete->next;
-    delete_node_int(node_to_delete);
+    struct Node_int* node_to_delete = iterate(data_structure, index);
+    struct Node_int* cursor_prev = node_to_delete->prev;
+    struct Node_int* cursor_next = node_to_delete->next;
+    cursor_prev->next = cursor_next;
+    cursor_next->prev = cursor_prev;
+    delete_node(node_to_delete);
     data_structure->length -= 1;
 }
 

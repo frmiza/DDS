@@ -9,9 +9,15 @@ struct LinkedList
 LinkedList* create_linked_list()
 {
     struct LinkedList* new_linked_list = (struct LinkedList*)malloc(sizeof(struct LinkedList));
-    struct DataStructure* data_struct = data_structure_create();
+    struct DataStructure* data_struct = create_data_structure();
     new_linked_list->data_structure = data_struct;
     return new_linked_list;
+}
+
+void delete_linked_list(struct LinkedList* linked_list)
+{
+    delete_data_structure(linked_list->data_structure);
+    free(linked_list);
 }
 
 void insert_linked_list(struct LinkedList* linked_list, int data, size_t index)
@@ -44,6 +50,11 @@ void pop_linked_list(struct LinkedList* linked_list)
 void popleft_linked_list(struct LinkedList* linked_list)
 {
     remove_data_struct(linked_list->data_structure, 0);
+}
+
+int retrieve_linked_list(struct LinkedList* linked_list, size_t index)
+{
+    return retrieve_data_struct(linked_list->data_structure, index);
 }
 
 size_t get_lenth_linked_list(struct LinkedList* linked_list)

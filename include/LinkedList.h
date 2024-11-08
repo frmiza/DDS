@@ -1,26 +1,21 @@
-#ifndef LINKEDLIST_H
-#define LINKEDLIST_H
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "Types.h"
+#include "DataStructure.h"
 
-struct LinkedList_int
-{
-    struct Node_int *head;
-    struct Node_int *tail;
-    int lenght;
+typedef struct LinkedList LinkedList;
 
-    void (*insert)(struct LinkedList_int* linked_list, size_t index, int data);
-    void (*append)(struct LinkedList_int* linked_list, int data);
-    void (*appendleft)(struct LinkedList_int* linked_list, int data);
-    void (*remove)(struct LinkedList_int* linked_list, size_t index);
-    void (*pop)(struct LinkedList_int* linked_list);
-    void (*popleft)(struct LinkedList_int* linked_list);
-    int (*retrieve)(struct LinkedList_int* linked_list, size_t index);
+struct LinkedList* create_linked_list();
+void delete_linked_list(struct LinkedList* linked_list);
 
-};
+void insert_linked_list(struct LinkedList* linked_list, int data, size_t index);
+void append_linked_list(struct LinkedList* linked_list, int data);
+void appendleft_linked_list(struct LinkedList* linked_list, int data);
+void remove_linked_list(struct LinkedList* linked_list, size_t index);
+void pop_linked_list(struct LinkedList* linked_list);
+void popleft_linked_list(struct LinkedList* linked_list);
+int retrieve_linked_list(struct LinkedList* linked_list, size_t index);
+size_t get_lenth_linked_list(struct LinkedList* linked_list);
 
-struct LinkedList_int* linked_list_create();
-
-#endif //LINKEDLIST_Hj
+#endif //LINKED_LIST_H
