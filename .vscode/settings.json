@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "chrono": "cpp",
+        "variant": "cpp",
+        "string_view": "c"
+    }
+}
